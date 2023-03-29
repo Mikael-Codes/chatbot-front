@@ -1,18 +1,24 @@
-export default async function (req, res) {
+import getConfig from 'next/config';
 
-  const response = await fetch(process.env.LCC_ENDPOINT_URL, {
+export default async function (req, res) {
+  const response = await fetch(process.env.NEXT_PUBLIC_LLC_ENDPOINT_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-Api-Key": process.env.LCC_TOKEN
+      "Authorization": 'Bearer ' + process.env.NEXT_PUBLIC_OPENAI_API_KEY
     },
     body: JSON.stringify({
-      question: req.body.question,
-      history: req.body.history
+      "model": "gpt-3.5-turbo",
+      // Take the content variable from the request body question
+      "messages": [{"role":"user","content":req.body.question}],
+      "temperature": 0.7
+
     }),
   });
 
-    const data = await response.json();
-
+    const data = await response.json();   
+    console.log(data)
+    // Add the the message content to a new property called success
+    data['success'] = data.choices[0].message.content
     res.status(200).json({ result: data })
 }

@@ -1,4 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
+import ReactDOM from 'react-dom';
+import PdfUploader from './PdfUploader';
+
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import Image from 'next/image'
@@ -12,7 +15,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([
     {
-      "message": "Hi there! How can I help?",
+      "message": "Welcome to our chatbot! How can we help?",
       "type": "apiMessage"
     }
   ]);
@@ -71,7 +74,7 @@ export default function Home() {
       handleError();
       return;
     }
-
+   
     setMessages((prevMessages) => [...prevMessages, { "message": data.result.success, "type": "apiMessage" }]);
     setLoading(false);
     
@@ -96,23 +99,26 @@ export default function Home() {
     }, [messages])
 
   return (
-    <>
+    <div>
       <Head>
-        <title>LangChain Chat</title>
-        <meta name="description" content="LangChain documentation chatbot" />
+        <title>AI Chat</title>
+        <meta name="description" content="mWater documentation chatbot" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.topnav}>
-      <div className = {styles.navlogo}>
-    <a href="/">LangChain</a>
-    </div>
-    <div className = {styles.navlinks}>
-    <a href="https://langchain.readthedocs.io/en/latest/" target="_blank">Docs</a>
-    <a href="https://github.com/zahidkhawaja/langchain-chat-nextjs" target="_blank">GitHub</a>
-    </div>
-</div>
+        <div className = {styles.navlogo}>
+          <a href="/">AI Chat</a>
+          </div>
+          <div className = {styles.navlinks}>
+          {/* <a href="https://langchain.readthedocs.io/en/latest/" target="_blank">Docs</a>
+          <a href="https://github.com/zahidkhawaja/langchain-chat-nextjs" target="_blank">GitHub</a> */}
+          </div>
+     </div>
       <main className={styles.main}>
+      <div>
+        <PdfUploader />
+      </div>  
       <div className = {styles.cloud}>
         <div ref={messageListRef} className = {styles.messagelist}>
         {messages.map((message, index) => {
@@ -120,7 +126,8 @@ export default function Home() {
             // The latest message sent by the user will be animated while waiting for a response
               <div key = {index} className = {message.type === "userMessage" && loading && index === messages.length - 1  ? styles.usermessagewaiting : message.type === "apiMessage" ? styles.apimessage : styles.usermessage}>
                 {/* Display the correct icon depending on the message type */}
-                {message.type === "apiMessage" ? <Image src = "/parroticon.png" alt = "AI" width = "30" height = "30" className = {styles.boticon} priority = {true} /> : <Image src = "/usericon.png" alt = "Me" width = "30" height = "30" className = {styles.usericon} priority = {true} />}
+                
+                {message.type === "apiMessage" ? <Image src = "/logo.png" alt = "AI" width = "30" height = "30" className = {styles.boticon} priority = {true} /> : <Image src = "/usericon.png" alt = "Me" width = "30" height = "30" className = {styles.usericon} priority = {true} />}
               <div className = {styles.markdownanswer}>
                 {/* Messages are being rendered in Markdown format */}
                 <ReactMarkdown linkTarget = {"_blank"}>{message.message}</ReactMarkdown>
@@ -162,11 +169,11 @@ export default function Home() {
             </button>
             </form>
             </div>
-            <div className = {styles.footer}>
+            {/* <div className = {styles.footer}>
             <p>Powered by <a href = "https://github.com/hwchase17/langchain" target="_blank">LangChain</a>. Built by <a href="https://twitter.com/chillzaza_" target="_blank">Zahid</a>.</p>
-            </div>
+            </div> */}
         </div>
       </main>
-    </>
+    </div>
   )
 }
